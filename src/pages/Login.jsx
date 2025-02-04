@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
@@ -9,13 +9,18 @@ const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    if (firebase.isUserLoggedIn) navigate("/");
+  }, [firebase, navigate]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const result = await firebase.signinUserWithEmailAndPassword(
       email,
       password
     );
-    console.log(result);
+    console.log("result: ",result);
     navigate("/");
   };
   return (

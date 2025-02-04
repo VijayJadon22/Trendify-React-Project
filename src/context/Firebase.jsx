@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import {
@@ -7,7 +7,10 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
 } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -25,6 +28,7 @@ const app = initializeApp(firebaseConfig);
 const firebaseAuth = getAuth(app);
 
 const firebaseProvider = new GoogleAuthProvider();
+const firestore = getFirestore(app);
 
 const FirebaseContext = createContext(null);
 
@@ -33,6 +37,19 @@ export const useFirebase = () => {
 };
 
 export const FirebaseProvider = (props) => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    onAuthStateChanged(firebaseAuth, (user) => {
+      if (user) {
+        // console.log("User logged in: ", user);
+        setUser(user);
+      } else {
+        console.log("User logged out");
+        setUser(null);
+      }
+    });
+  }, []);
   const signupUserWithEmailAndPassword = (email, password) => {
     return createUserWithEmailAndPassword(firebaseAuth, email, password);
   };
@@ -45,12 +62,26 @@ export const FirebaseProvider = (props) => {
   const signinUserWithEmailAndPassword = (email, password) => {
     return signInWithEmailAndPassword(firebaseAuth, email, password);
   };
+
+  const logoutUser = async () => {
+    try {
+      await signOut(firebaseAuth);
+      console.log("User logged out");
+    } catch (error) {
+      console.log("Error logging out: ", error);
+    }
+  };
+
+  const isUserLoggedIn = user ? true : false;
+  console.log("current user: ", firebaseAuth.currentUser);
   return (
     <FirebaseContext.Provider
       value={{
         signupUserWithEmailAndPassword,
         signinWithGoogle,
         signinUserWithEmailAndPassword,
+        logoutUser,
+        isUserLoggedIn,
       }}
     >
       {props.children}

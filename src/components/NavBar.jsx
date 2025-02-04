@@ -1,13 +1,19 @@
 import React from "react";
 import logo from "../assets/logo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useFirebase } from "../context/Firebase";
+import { PiShoppingCartThin } from "react-icons/pi";
 
 const NavBar = () => {
+  const { isUserLoggedIn, logoutUser } = useFirebase();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logoutUser();
+    navigate("/");
+  };
   return (
-    <div
-      className="w-full sm:h-16 h-36 bg-white flex items-center 
-                      justify-between border-b-1 border-gray-200"
-    >
+    <div className="w-full sm:h-16 h-36 bg-white flex items-center justify-between border-b-1 border-gray-200 fixed">
       <div className="flex items-center h-full sm:ml-14 ml-4 sm:w-60 w-30 ">
         <Link to={"/"}>
           <img
@@ -22,11 +28,23 @@ const NavBar = () => {
           </p>
         </Link>
       </div>
-      <Link to={"/login"}>
-        <div className=" sm:mr-20 mr-5 sm:text-xl text-lg font-semibold text-gray-700">
-          Login
-        </div>
-      </Link>
+      <div className="flex items-center sm:w-48 w-36 justify-evenly  sm:mr-14 mr-4">
+        {isUserLoggedIn ? (
+          <div
+            onClick={handleLogout}
+            className="sm:text-md text-md font-semibold text-gray-700 cursor-pointer border border-gray-400 py-0.5  px-4 rounded-full hover:bg-gray-200 transition-all duration-300"
+          >
+            Logout
+          </div>
+        ) : (
+          <Link to={"/login"}>
+            <div className="sm:text-md text-md font-semibold text-gray-700 cursor-pointer border border-gray-400 py-0.5  px-4 rounded-full hover:bg-gray-200 transition-all duration-300">
+              Login
+            </div>
+          </Link>
+        )}
+        <PiShoppingCartThin className="text-2xl " />
+      </div>
     </div>
   );
 };

@@ -3,7 +3,7 @@ import ProductCard from "../components/ProductCard";
 
 const Home = () => {
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full mt-16">
       <div className="  grid sm:grid-cols-12  ">
         <div className="sm:col-span-2 sm:block hidden   min-h-96">
           Filter
