@@ -60,7 +60,10 @@ const Signup = () => {
               </button>
             </div>
             <div className="flex justify-center">
-              <button className="p-1 border border-gray-400 rounded-full">
+              <button
+                onClick={firebase.signinWithGoogle}
+                className="p-1 border border-gray-400 rounded-full"
+              >
                 <FaGoogle className="cursor-pointer m-0" />
               </button>
             </div>

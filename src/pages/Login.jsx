@@ -1,16 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import logo from "../assets/logo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { FaGoogle } from "react-icons/fa";
+import { useFirebase } from "../context/Firebase";
 
 const Login = () => {
+  const firebase = useFirebase();
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const result = await firebase.signinUserWithEmailAndPassword(
+      email,
+      password
+    );
+    console.log(result);
+    navigate("/");
+  };
   return (
     <div className=" sm:w-full sm:h-screen w-full  bg-gray-300 flex items-center justify-center ">
       <div className="sm:w-4xl w-full h-full p-4 grid sm:grid-cols-2 rounded">
         <div className=" flex flex-col items-center bg-white  rounded">
-          <form className="flex flex-col items-center w-full p-5">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col items-center w-full py-2 px-5"
+          >
             <div className="flex flex-col items-center">
               <img
-                className="mt-1 w-30"
+                className=" w-30"
                 src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/lotus.webp"
                 alt="logo-image"
               />
@@ -20,17 +38,32 @@ const Login = () => {
             <div className="flex flex-col items-start mt-5 w-full p-6">
               <p className="text-gray-600">Please login ot your account</p>
               <input
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="border border-gray-400 rounded md:w-72 w-full h-8 pl-3 my-4  focus:outline-none"
                 type="email"
                 placeholder="Email"
               />
               <input
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="border border-gray-400 rounded md:w-72 w-full h-8 pl-3 mb-4 focus:outline-none"
                 type="password"
                 placeholder="Password"
               />
-              <button className="border border-gray-400 rounded md:w-72 w-full h-8 pl-3 cursor-pointer bg-gray-500 text-white">
+              <button
+                type="submit"
+                className="border border-gray-400 rounded md:w-72 w-full h-8 pl-3 cursor-pointer bg-gray-500 text-white"
+              >
                 Login
+              </button>
+            </div>
+            <div className="flex justify-center">
+              <button
+                onClick={firebase.signinWithGoogle}
+                className="p-1 border border-gray-400 rounded-full"
+              >
+                <FaGoogle className="cursor-pointer m-0" />
               </button>
             </div>
             <div className="flex items-center justify-between w-full p-6">
