@@ -1,21 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { useFirebase } from "../context/Firebase";
+import { FaGoogle } from "react-icons/fa";
 
 const Signup = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const firebase = useFirebase();
+  console.log(firebase);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("signing up a user...");
+    const result = await firebase.signupUserWithEmailAndPassword(
+      email,
+      password
+    );
+    console.log("user signed up: ", result);
+  };
   return (
     <div className=" sm:w-full sm:h-screen w-full  bg-gray-300 flex items-center justify-center ">
       <div className="sm:w-4xl w-full h-full p-4 grid sm:grid-cols-2 rounded">
         <div className=" flex flex-col items-center bg-white  rounded">
-          <form className="flex flex-col items-center w-full p-5">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col items-center w-full py-1 px-2"
+          >
             <div className="flex flex-col items-center">
               <img
-                className="mt-5 w-30"
+                className=" w-30"
                 src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/lotus.webp"
                 alt="logo-image"
               />
               <p className="font-bold">Get Trendified!</p>
             </div>
 
-            <div className="flex flex-col items-start mt-5 w-full p-6">
+            <div className="flex flex-col items-start  w-full p-6">
               <p className="text-gray-600">Please enter your details</p>
               <input
                 className="border border-gray-400 rounded md:w-72 w-full h-8 pl-3 mt-4 focus:outline-none"
@@ -23,11 +42,15 @@ const Signup = () => {
                 placeholder="Name"
               />
               <input
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="border border-gray-400 rounded md:w-72 w-full h-8 pl-3 my-4  focus:outline-none"
                 type="email"
                 placeholder="Email"
               />
               <input
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="border border-gray-400 rounded md:w-72 w-full h-8 pl-3 mb-4 focus:outline-none"
                 type="password"
                 placeholder="Password"
@@ -36,11 +59,22 @@ const Signup = () => {
                 Signup
               </button>
             </div>
-            <div className="flex items-center justify-between w-full p-6">
-              <p>Login to your account</p>
-              <button className="py-1 px-4 border border-gray-400 rounded">
-                Login
+            <div className="flex justify-center">
+              <button className="p-1 border border-gray-400 rounded-full">
+                <FaGoogle className="cursor-pointer m-0" />
               </button>
+            </div>
+
+            <div className="flex items-center justify-between w-full p-3">
+              <p>Login to your account</p>
+              <Link to={"/login"}>
+                <button
+                  type="submit"
+                  className="py-1 px-4 border border-gray-400 rounded cursor-pointer"
+                >
+                  Login
+                </button>
+              </Link>
             </div>
           </form>
         </div>

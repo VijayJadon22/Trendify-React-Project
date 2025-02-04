@@ -1,6 +1,5 @@
 import React from "react";
 
-// eslint-disable-next-line react/prop-types
 const ProductCard = ({image}) => {
   return (
     <div className="w-48 flex flex-col   hover:shadow-gray-600 shadow-lg hover:scale-101 transition-all duration-300  cursor-pointer mb-6">

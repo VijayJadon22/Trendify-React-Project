@@ -1,5 +1,6 @@
 import React from "react";
 import logo from "../assets/logo.png";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   return (
@@ -9,7 +10,7 @@ const Login = () => {
           <form className="flex flex-col items-center w-full p-5">
             <div className="flex flex-col items-center">
               <img
-                className="mt-9 w-30"
+                className="mt-1 w-30"
                 src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/lotus.webp"
                 alt="logo-image"
               />
@@ -34,9 +35,11 @@ const Login = () => {
             </div>
             <div className="flex items-center justify-between w-full p-6">
               <p>Don&apos;t have an account?</p>
-              <button className="py-1 px-4 border border-gray-400 rounded">
-                Signup
-              </button>
+              <Link to={"/signup"}>
+                <button className="py-1 px-4 border border-gray-400 rounded cursor-pointer">
+                  Signup
+                </button>
+              </Link>
             </div>
           </form>
         </div>
