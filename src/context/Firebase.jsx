@@ -1,79 +1,63 @@
 import { createContext, useContext, useEffect, useState } from "react";
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+
 import {
   createUserWithEmailAndPassword,
-  getAuth,
-  GoogleAuthProvider,
   signInWithPopup,
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
 } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
 
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-// Initialize Firebase Authentication and get a reference to the service
-const firebaseAuth = getAuth(app);
-
-const firebaseProvider = new GoogleAuthProvider();
-const firestore = getFirestore(app);
-
-const FirebaseContext = createContext(null);
+const FirebaseContext = createContext(null); // Create a context for Firebase
 
 export const useFirebase = () => {
-  return useContext(FirebaseContext);
+  return useContext(FirebaseContext); // Custom hook to use Firebase context
 };
 
 export const FirebaseProvider = (props) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null); // State to hold the current user
 
   useEffect(() => {
-    onAuthStateChanged(firebaseAuth, (user) => {
+    const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
       if (user) {
-        // console.log("User logged in: ", user);
-        setUser(user);
+        setUser(user); // Set user if logged in
       } else {
-        console.log("User logged out");
-        setUser(null);
+        setUser(null); // Clear user if logged out
       }
     });
+    return unsubscribe; // Cleanup the subscription on unmount
   }, []);
+
+  // Function to sign up a user with email and password
   const signupUserWithEmailAndPassword = (email, password) => {
     return createUserWithEmailAndPassword(firebaseAuth, email, password);
   };
 
+  // Function to sign in a user with Google
   const signinWithGoogle = async () => {
     const details = await signInWithPopup(firebaseAuth, firebaseProvider);
-    console.log(details);
+    console.log(details); // Log details for debugging
   };
 
+  // Function to sign in a user with email and password
   const signinUserWithEmailAndPassword = (email, password) => {
     return signInWithEmailAndPassword(firebaseAuth, email, password);
   };
 
+  // Function to log out a user
   const logoutUser = async () => {
     try {
       await signOut(firebaseAuth);
-      console.log("User logged out");
+      console.log("User logged out"); // Log for debugging
     } catch (error) {
-      console.log("Error logging out: ", error);
+      console.log("Error logging out: ", error); // Log any errors
     }
   };
 
-  const isUserLoggedIn = user ? true : false;
-  console.log("current user: ", firebaseAuth.currentUser);
+  const isUserLoggedIn = !!user; // Convert the user object to a boolean. True if a user is logged in, false if no user is logged in.
+
+  console.log("current user: ", firebaseAuth.currentUser); // Log the current user for debugging
+
   return (
     <FirebaseContext.Provider
       value={{
@@ -84,7 +68,7 @@ export const FirebaseProvider = (props) => {
         isUserLoggedIn,
       }}
     >
-      {props.children}
+      {props.children} {/* Render children components */}
     </FirebaseContext.Provider>
   );
 };
