@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useFirebase } from "../context/Firebase";
+import { useUserContext } from "../context/usersContext";
 import { FaGoogle } from "react-icons/fa";
 
+// Signup component for new user registration
 const Signup = () => {
+  // State variables for email and password input fields
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const firebase = useFirebase();
-  console.log(firebase);
+  const { signupUserWithEmailAndPassword, signinWithGoogle } = useUserContext();
+
+  // Handle form submission for email and password signup
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("signing up a user...");
-    const result = await firebase.signupUserWithEmailAndPassword(
-      email,
-      password
-    );
+    const result = await signupUserWithEmailAndPassword(email, password);
     console.log("user signed up: ", result);
   };
   return (
@@ -61,7 +61,7 @@ const Signup = () => {
             </div>
             <div className="flex justify-center">
               <button
-                onClick={firebase.signinWithGoogle}
+                onClick={signinWithGoogle}
                 className="p-1 border border-gray-400 rounded-full"
               >
                 <FaGoogle className="cursor-pointer m-0" />

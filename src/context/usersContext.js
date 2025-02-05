@@ -33,17 +33,17 @@ export const UserProvider = (props) => {
     return createUserWithEmailAndPassword(firebaseAuth, email, password);
   };
 
-  // Function to sign in a user with Google
-  const signinWithGoogle = async () => {
-    const details = await signInWithPopup(firebaseAuth, googleAuthProvider);
-    console.log("User signed in with Google: ", details); // Log details for debugging
-  };
-
   // Function to sign in a user with email and password
   const signinUserWithEmailAndPassword = (email, password) => {
     return signInWithEmailAndPassword(firebaseAuth, email, password);
   };
 
+  // Function to sign in a user with Google
+  const signinWithGoogle = async () => {
+    const details = await signInWithPopup(firebaseAuth, googleAuthProvider);
+    console.log("User signed in with Google: ", details); // Logging details for debugging
+  };
+  
   // Function to log out a user
   const logoutUser = async () => {
     try {
