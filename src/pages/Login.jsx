@@ -2,27 +2,33 @@ import React, { useEffect, useState } from "react";
 import logo from "../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
-import { useFirebase } from "../context/Firebase";
+import { useUserContext } from "../context/usersContext";
 
+// Login component for user authentication
 const Login = () => {
-  const firebase = useFirebase();
+  // Get necessary functions and state from the user context
+  const { isUserLoggedIn, signinUserWithEmailAndPassword, signinWithGoogle } =
+    useUserContext();
   const navigate = useNavigate();
+
+  // State variables for email and password input fields
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // Redirect to the home page if the user is already logged in
   useEffect(() => {
-    if (firebase.isUserLoggedIn) navigate("/");
-  }, [firebase, navigate]);
+    if (isUserLoggedIn) navigate("/");
+  }, [isUserLoggedIn, navigate]);
 
+  // Handle form submission for email and password login
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await firebase.signinUserWithEmailAndPassword(
-      email,
-      password
-    );
-    console.log("result: ",result);
+    const result = await signinUserWithEmailAndPassword(email, password);
+    console.log("result: ", result);
+    // Navigate to the home page after successful login
     navigate("/");
   };
+
   return (
     <div className=" sm:w-full sm:h-screen w-full  bg-gray-300 flex items-center justify-center ">
       <div className="sm:w-4xl w-full h-full p-4 grid sm:grid-cols-2 rounded">
@@ -65,7 +71,7 @@ const Login = () => {
             </div>
             <div className="flex justify-center">
               <button
-                onClick={firebase.signinWithGoogle}
+                onClick={signinWithGoogle}
                 className="p-1 border border-gray-400 rounded-full"
               >
                 <FaGoogle className="cursor-pointer m-0" />

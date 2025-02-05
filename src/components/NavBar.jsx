@@ -1,13 +1,16 @@
 import React from "react";
 import logo from "../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
-import { useFirebase } from "../context/Firebase";
+import { useUserContext } from "../context/usersContext";
 import { PiShoppingCartThin } from "react-icons/pi";
 
+// NavBar component for website navigation
 const NavBar = () => {
-  const { isUserLoggedIn, logoutUser } = useFirebase();
+  // Necessary functions and state from the user context
+  const { isUserLoggedIn, logoutUser } = useUserContext();
   const navigate = useNavigate();
 
+  // Handle user logout and redirect to the home page
   const handleLogout = async () => {
     await logoutUser();
     navigate("/");
