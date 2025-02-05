@@ -43,7 +43,7 @@ export const UserProvider = (props) => {
     const details = await signInWithPopup(firebaseAuth, googleAuthProvider);
     console.log("User signed in with Google: ", details); // Logging details for debugging
   };
-  
+
   // Function to log out a user
   const logoutUser = async () => {
     try {
