@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useUserContext } from "../context/usersContext";
+import { useUserContext } from "../context/usersContext.jsx";
 import { FaGoogle } from "react-icons/fa";
 
 // Signup component for new user registration
@@ -18,12 +18,12 @@ const Signup = () => {
     console.log("user signed up: ", result);
   };
   return (
-    <div className=" sm:w-full sm:h-screen w-full  bg-gray-300 flex items-center justify-center ">
-      <div className="sm:w-4xl w-full h-full p-4 grid sm:grid-cols-2 rounded">
+    <div className="w-full h-full bg-gray-300 flex items-center justify-center ">
+      <div className="sm:w-3xl w-full h-full p-4 grid sm:grid-cols-2 rounded">
         <div className=" flex flex-col items-center bg-white  rounded">
           <form
             onSubmit={handleSubmit}
-            className="flex flex-col items-center w-full py-1 px-2"
+            className="flex flex-col items-center w-full py-2 "
           >
             <div className="flex flex-col items-center">
               <img

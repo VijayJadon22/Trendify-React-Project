@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import logo from "../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
-import { useUserContext } from "../context/usersContext";
+import { useUserContext } from "../context/usersContext.jsx";
 
 // Login component for user authentication
 const Login = () => {
@@ -30,12 +30,12 @@ const Login = () => {
   };
 
   return (
-    <div className=" sm:w-full sm:h-screen w-full  bg-gray-300 flex items-center justify-center ">
-      <div className="sm:w-4xl w-full h-full p-4 grid sm:grid-cols-2 rounded">
+    <div className="w-full h-full  bg-gray-300 flex items-center p-7 justify-center overflow-hidden">
+      <div className="sm:w-3xl w-full  bg-blue-300 grid sm:grid-cols-2 rounded">
         <div className=" flex flex-col items-center bg-white  rounded">
           <form
             onSubmit={handleSubmit}
-            className="flex flex-col items-center w-full py-2 px-5"
+            className="flex flex-col items-center w-full py-2"
           >
             <div className="flex flex-col items-center">
               <img
@@ -77,7 +77,7 @@ const Login = () => {
                 <FaGoogle className="cursor-pointer m-0" />
               </button>
             </div>
-            <div className="flex items-center justify-between w-full p-6">
+            <div className="flex items-center justify-between w-full  p-3">
               <p>Don&apos;t have an account?</p>
               <Link to={"/signup"}>
                 <button className="py-1 px-4 border border-gray-400 rounded cursor-pointer">

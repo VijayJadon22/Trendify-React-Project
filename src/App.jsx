@@ -9,7 +9,7 @@ function App() {
   return (
     <BrowserRouter>
       <>
-        <div className="w-full h-screen flex flex-col">
+        <div className="w-full h-full flex flex-col ">
           <NavBar />
           <Routes>
             <Route path="/" element={<Home />} />

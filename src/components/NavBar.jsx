@@ -1,7 +1,7 @@
 import React from "react";
 import logo from "../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
-import { useUserContext } from "../context/usersContext";
+import { useUserContext } from "../context/usersContext.jsx";
 import { PiShoppingCartThin } from "react-icons/pi";
 
 // NavBar component for website navigation
@@ -15,8 +15,15 @@ const NavBar = () => {
     await logoutUser();
     navigate("/");
   };
+
+  // Apply the 'fixed' class only if the current route is '/'
+  const navClass =
+    location.pathname === "/"
+      ? "w-full sm:h-16 h-20 bg-white flex items-center justify-between border-b-1 border-gray-200 z-10 fixed"
+      : "w-full sm:h-16 h-20 bg-white flex items-center justify-between border-b-1 border-gray-200 z-10";
+
   return (
-    <div className="w-full sm:h-16 h-36 bg-white flex items-center justify-between border-b-1 border-gray-200 fixed">
+    <div className={navClass}>
       <div className="flex items-center h-full sm:ml-14 ml-4 sm:w-60 w-30 ">
         <Link to={"/"}>
           <img
