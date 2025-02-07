@@ -26,7 +26,7 @@ export const UserProvider = (props) => {
       }
     });
     return unsubscribe; // Cleanup the subscription on unmount
-  }, []);
+  }, [firebaseAuth]);
 
   // Function to sign up a user with email and password
   const signupUserWithEmailAndPassword = (email, password) => {
@@ -40,8 +40,12 @@ export const UserProvider = (props) => {
 
   // Function to sign in a user with Google
   const signinWithGoogle = async () => {
-    const details = await signInWithPopup(firebaseAuth, googleAuthProvider);
-    console.log("User signed in with Google: ", details); // Logging details for debugging
+    try {
+      const details = await signInWithPopup(firebaseAuth, googleAuthProvider);
+      console.log("User signed in with Google: ", details); // Logging details for debugging
+    } catch (error) {
+      console.log("Error signing in with Google: ", error); // Log any errors
+    }
   };
 
   // Function to log out a user
