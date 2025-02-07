@@ -1,14 +1,24 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useUserContext } from "../context/usersContext.jsx";
+import { useUserContext } from "../context/usersContext.jsx"; // Import the UserContext
 import { FaGoogle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 // Signup component for new user registration
 const Signup = () => {
   // State variables for email and password input fields
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { signupUserWithEmailAndPassword, signinWithGoogle } = useUserContext();
+
+  // Destructure functions and state from UserContext
+  const { signupUserWithEmailAndPassword, signinWithGoogle, isUserLoggedIn } =
+    useUserContext();
+
+  // Get the navigate function from useNavigate
+  const navigate = useNavigate();
+
+  // Redirect to home page if the user is already logged in
+  if (isUserLoggedIn) navigate("/");
 
   // Handle form submission for email and password signup
   const handleSubmit = async (e) => {
@@ -17,24 +27,25 @@ const Signup = () => {
     const result = await signupUserWithEmailAndPassword(email, password);
     console.log("user signed up: ", result);
   };
+
   return (
-    <div className="w-full h-full bg-gray-300 flex items-center justify-center ">
+    <div className="w-full h-full bg-gray-300 flex items-center justify-center">
       <div className="sm:w-3xl w-full h-full p-4 grid sm:grid-cols-2 rounded">
-        <div className=" flex flex-col items-center bg-white  rounded">
+        <div className="flex flex-col items-center bg-white rounded">
           <form
             onSubmit={handleSubmit}
-            className="flex flex-col items-center w-full py-2 "
+            className="flex flex-col items-center w-full py-2"
           >
             <div className="flex flex-col items-center">
               <img
-                className=" w-30"
+                className="w-30"
                 src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/lotus.webp"
                 alt="logo-image"
               />
               <p className="font-bold">Get Trendified!</p>
             </div>
 
-            <div className="flex flex-col items-start  w-full p-6">
+            <div className="flex flex-col items-start w-full p-6">
               <p className="text-gray-600">Please enter your details</p>
               <input
                 className="border border-gray-400 rounded md:w-72 w-full h-8 pl-3 mt-4 focus:outline-none"
@@ -44,7 +55,7 @@ const Signup = () => {
               <input
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="border border-gray-400 rounded md:w-72 w-full h-8 pl-3 my-4  focus:outline-none"
+                className="border border-gray-400 rounded md:w-72 w-full h-8 pl-3 my-4 focus:outline-none"
                 type="email"
                 placeholder="Email"
               />
@@ -59,6 +70,7 @@ const Signup = () => {
                 Signup
               </button>
             </div>
+
             <div className="flex justify-center">
               <button
                 onClick={signinWithGoogle}
@@ -81,7 +93,7 @@ const Signup = () => {
             </div>
           </form>
         </div>
-        <div className=" flex flex-col items-center justify-center p-20 text-white bg-gray-400 rounded">
+        <div className="flex flex-col items-center justify-center p-20 text-white bg-gray-400 rounded">
           <h1>We are more than just a company</h1>
           <p>
             Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do

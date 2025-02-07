@@ -30,8 +30,8 @@ const Login = () => {
   };
 
   return (
-    <div className="w-full h-full  bg-gray-300 flex items-center p-7 justify-center overflow-hidden">
-      <div className="sm:w-3xl w-full  bg-blue-300 grid sm:grid-cols-2 rounded">
+    <div className="w-full h-full bg-gray-300 flex items-center justify-center ">
+      <div className="sm:w-3xl w-full h-full p-4 grid sm:grid-cols-2 rounded">
         <div className=" flex flex-col items-center bg-white  rounded">
           <form
             onSubmit={handleSubmit}
