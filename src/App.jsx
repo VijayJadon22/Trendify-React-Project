@@ -1,5 +1,6 @@
 import "./App.css";
 import NavBar from "./components/NavBar";
+import Cart from "./pages/Cart";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import ProductDetails from "./pages/productDetails";
@@ -17,6 +18,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/products/:productId" element={<ProductDetails />} />
+            <Route path="/cart" element={<Cart />} />
           </Routes>
         </div>
       </>
