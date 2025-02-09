@@ -18,7 +18,7 @@ const Login = () => {
   // Redirect to the home page if the user is already logged in
   useEffect(() => {
     if (isUserLoggedIn) navigate("/");
-  }, [isUserLoggedIn, navigate]);
+  }, [isUserLoggedIn]);
 
   // Handle form submission for email and password login
   const handleSubmit = async (e) => {

@@ -102,7 +102,6 @@ export const UserProvider = (props) => {
       const user = details.user;
       console.log("User signed in with Google: ", details); // Logging details for debugging
       setUser(user); // Set user state
-      await createUserDocument(user); // Create user document in Firestore
     } catch (error) {
       console.log("Error signing in with Google: ", error); // Log any errors
     }

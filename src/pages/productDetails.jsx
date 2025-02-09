@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useProductContext } from "../context/productsContext";
+import { IoMdAdd } from "react-icons/io";
+import { GrFormSubtract } from "react-icons/gr";
+import { useCartContext } from "../context/cartContext";
 
 const ProductDetails = () => {
   // Get products and fetchProductDetails function from ProductContext
   const { products, fetchProductDetails } = useProductContext();
+  const { addToCart } = useCartContext(); // Get addToCart function from CartContext
 
   // State to hold the product details
   const [product, setProduct] = useState(null);
+  const [size, setSize] = useState(null); // State to hold selected size
+  const [quantity, setQuantity] = useState("1"); // State to hold quantity
+  console.log("size", size, "quantity", quantity);
 
   // Get productId from the URL parameters
   const { productId } = useParams();
-  // console.log(productId);
 
   // useEffect to load product details when productId changes
   useEffect(() => {
@@ -30,13 +36,24 @@ const ProductDetails = () => {
     loadProductDetails();
   }, [productId, products, fetchProductDetails]);
 
+  // Function to handle adding product to cart
+  const handleAddToCart = async () => {
+    if (size) {
+      await addToCart(product, size, quantity); // Call addToCart with product details
+      alert("Product added to cart successfully!");
+    } else {
+      alert("Please select size");
+    }
+  };
+
   // Return a message if product details are not loaded yet
-  if (!product)
+  if (!product) {
     return (
       <div>
         <h1>Something went wrong...</h1>
       </div>
     );
+  }
 
   return (
     <div className="grid lg:grid-cols-12 w-full h-full bg-gray-300">
@@ -59,12 +76,30 @@ const ProductDetails = () => {
         <div className="md:text-lg text-md text-gray-400 mb-4">
           {product.sizes.map((e, index) => (
             <button
+              onClick={() => setSize(e)}
               key={index}
-              className="border lg:w-11 lg:h-11 w-8 h-8 text-sm rounded-full mr-3 cursor-pointer hover:bg-gray-600 transition-all duration-200"
+              className={`border lg:w-11 lg:h-11 w-8 h-8 text-sm rounded-full mr-3 cursor-pointer hover:bg-gray-600 transition-all duration-200 
+                ${size === e ? "bg-gray-600 text-white" : "bg-white"}`}
             >
               {e}
             </button>
           ))}
+        </div>
+
+        <p className="mb-2 font-bold">Quantity</p>
+        {/* Quantity selection buttons */}
+        <div className="md:text-lg text-md text-gray-400 mb-4 flex items-center">
+          <IoMdAdd
+            onClick={() => setQuantity((state) => Number(state) + 1)} // Increment quantity
+            className="mr-3 cursor-pointer"
+          />
+          {quantity}
+          <GrFormSubtract
+            onClick={
+              () => setQuantity((state) => (state > 1 ? state - 1 : state)) // Decrement quantity
+            }
+            className="ml-3 cursor-pointer"
+          />
         </div>
 
         {/* Product price and discount */}
@@ -79,7 +114,10 @@ const ProductDetails = () => {
         </div>
 
         {/* Add to Cart button */}
-        <button className="p-2 rounded-2xl bg-red-400 text-white text-sm cursor-pointer hover:bg-pink-600 transition-all duration-200">
+        <button
+          onClick={handleAddToCart}
+          className="p-2 rounded-2xl bg-red-400 text-white text-sm cursor-pointer hover:bg-pink-600 transition-all duration-200"
+        >
           Add To Cart
         </button>
       </div>
