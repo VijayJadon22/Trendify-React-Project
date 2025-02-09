@@ -120,9 +120,52 @@ export const ProductProvider = (props) => {
   // State to hold the list of products
   const [products, setProducts] = useState([]);
   // Fetch products when the component mounts
+
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  console.log(searchQuery);
+
+  useEffect(() => {
+    let filtered = products;
+    if (selectedCategories.length > 0) {
+      filtered = filtered.filter((product) =>
+        selectedCategories.includes(product.category)
+      );
+    }
+
+    if (searchQuery) {
+      filtered = filtered.filter(
+        (product) =>
+          product.name.toLowerCase().includes(searchQuery) ||
+          product.brand.toLowerCase().includes(searchQuery)
+      );
+    }
+    setFilteredProducts(filtered);
+  }, [selectedCategories, products, searchQuery]);
+
   useEffect(() => {
     fetchAllProducts(); //function to fetch all products from forestore database
   }, []);
+
+  const handleCheckboxChange = (event) => {
+    try {
+      const { name, checked } = event.target;
+      setSelectedCategories((prev) =>
+        checked ? [...prev, name] : prev.filter((category) => category !== name)
+      );
+    } catch (error) {
+      console.log("Error filtering products, handleCheckboxChange: ", error);
+    }
+  };
+
+  const handleInputFilter = (event) => {
+    try {
+      setSearchQuery(event.target.value.toLowerCase());
+    } catch (error) {
+      console.log("Error filtering products, handleInputFilter: ", error);
+    }
+  };
 
   // // uploading products
   // const uploadData = async () => {
@@ -185,7 +228,16 @@ export const ProductProvider = (props) => {
   };
   return (
     // Provide product-related data and functions to child components
-    <ProductContext.Provider value={{ products, fetchProductDetails }}>
+    <ProductContext.Provider
+      value={{
+        products,
+        fetchProductDetails,
+        handleCheckboxChange,
+        selectedCategories,
+        filteredProducts,
+        handleInputFilter,
+      }}
+    >
       {props.children}
     </ProductContext.Provider>
   );
