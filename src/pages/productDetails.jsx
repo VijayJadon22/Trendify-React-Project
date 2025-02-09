@@ -39,7 +39,7 @@ const ProductDetails = () => {
   // Function to handle adding product to cart
   const handleAddToCart = async () => {
     if (size) {
-      await addToCart(product, size, quantity); // Call addToCart with product details
+      await addToCart(product, size, Number(quantity)); // Call addToCart with product details
       alert("Product added to cart successfully!");
     } else {
       alert("Please select size");
@@ -54,7 +54,7 @@ const ProductDetails = () => {
       </div>
     );
   }
-
+  console.log(product);
   return (
     <div className="grid lg:grid-cols-12 w-full h-full bg-gray-300">
       {/* Left section for product image */}

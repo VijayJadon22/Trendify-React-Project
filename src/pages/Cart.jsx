@@ -64,7 +64,7 @@ const Cart = () => {
           </tbody>
         </table>
       </div>
-      <div className="mt-6 md:w-xl w-full text-center">
+      <div className="mt-6 md:w-xl w-full text-center mb-20">
         <h1 className="font-semibold">Cart Total</h1>
         <div className="w-full flex justify-between px-2  border-b-1 border-gray-400 mb-2">
           <span className="font-bold">Subtotal</span>

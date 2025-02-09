@@ -3,12 +3,15 @@ import logo from "../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useUserContext } from "../context/usersContext.jsx";
 import { PiShoppingCartThin } from "react-icons/pi";
+import { useCartContext } from "../context/cartContext.jsx";
 
 // NavBar component for website navigation
 const NavBar = () => {
   // Necessary functions and state from the user context
   const { isUserLoggedIn, logoutUser } = useUserContext();
   const navigate = useNavigate();
+
+  const { cartCount } = useCartContext();
 
   // Handle user logout and redirect to the home page
   const handleLogout = async () => {
@@ -54,7 +57,14 @@ const NavBar = () => {
           </Link>
         )}
         <Link to={"/cart"}>
-          <PiShoppingCartThin className="text-2xl cursor-pointer " />
+          <div className="relative">
+            <PiShoppingCartThin className="text-2xl cursor-pointer " />
+            {cartCount !== 0 ? (
+              <div className="bg-red-500 w-5 h-5 text-white  rounded-full absolute bottom-4 left-4 flex items-center justify-center text-xs ">
+                {cartCount}
+              </div>
+            ) : null}
+          </div>
         </Link>
       </div>
     </div>
