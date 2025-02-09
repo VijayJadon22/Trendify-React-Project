@@ -11,7 +11,7 @@ const ProductDetails = () => {
 
   // Get productId from the URL parameters
   const { productId } = useParams();
-  console.log(productId);
+  // console.log(productId);
 
   // useEffect to load product details when productId changes
   useEffect(() => {

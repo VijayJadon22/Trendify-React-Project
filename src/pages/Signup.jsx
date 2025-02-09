@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 const Signup = () => {
   // State variables for email and password input fields
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
 
   // Destructure functions and state from UserContext
@@ -24,7 +25,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("signing up a user...");
-    const result = await signupUserWithEmailAndPassword(email, password);
+    const result = await signupUserWithEmailAndPassword(email, password, name);
     console.log("user signed up: ", result);
   };
 
@@ -48,6 +49,8 @@ const Signup = () => {
             <div className="flex flex-col items-start w-full p-6">
               <p className="text-gray-600">Please enter your details</p>
               <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 className="border border-gray-400 rounded md:w-72 w-full h-8 pl-3 mt-4 focus:outline-none"
                 type="text"
                 placeholder="Name"
