@@ -53,7 +53,9 @@ const NavBar = () => {
             </div>
           </Link>
         )}
-        <PiShoppingCartThin className="text-2xl " />
+        <Link to={"/cart"}>
+          <PiShoppingCartThin className="text-2xl cursor-pointer " />
+        </Link>
       </div>
     </div>
   );

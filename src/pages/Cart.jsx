@@ -1,7 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { MdDeleteOutline } from "react-icons/md";
+import { useCartContext } from "../context/cartContext";
+import { useUserContext } from "../context/usersContext";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
+  const { cartItems } = useCartContext();
+  const [cartTotal, setCartTotal] = useState(0);
+  const { isUserLoggedIn } = useUserContext();
+  const navigate = useNavigate();
+  const handleCartTotal = () => {
+    const total = cartItems.reduce(
+      (total, item) => (total += item.price * item.quantity),
+      0
+    );
+    setCartTotal(total);
+  };
+  useEffect(() => {
+    if (isUserLoggedIn) {
+      if (cartItems) {
+        handleCartTotal();
+      }
+    } else {
+      navigate("/login");
+    }
+  }, [cartItems]);
   return (
     <div className="flex flex-col items-center w-full  mt-6">
       <div className="md:w-full w-full flex justify-center">
@@ -17,36 +40,43 @@ const Cart = () => {
             </tr>
           </thead>
           <tbody className="text-gray-500 text-sm">
-            <tr className="border-b-1 border-gray-400 md:h-16 h-12">
-              <td className="flex flex-col justify-center items-center md:h-16 h-12">
-                <img
-                  className="md:h-13 h-10"
-                  src="https://www.cottonheritage.com/catImg/WAMSMALL/mc1040_082924094923.jpg"
-                  alt=""
-                />
-              </td>
-              <td className="text-center">Zara Tshirt</td>
-              <td className="text-center">220</td>
-              <td className="text-center">2 </td>
-              <td className="text-center">440</td>
-              <td className="text-center">x</td>
-            </tr>
+            {cartItems?.map((item, index) => (
+              <tr
+                key={index}
+                className="border-b-1 border-gray-400 md:h-16 h-12"
+              >
+                <td className="flex flex-col justify-center items-center md:h-16 h-12">
+                  <img
+                    className="md:h-13 h-10"
+                    src={item.image}
+                    alt="item-image"
+                  />
+                </td>
+                <td className="text-center">
+                  {item.brand} {item.name}
+                </td>
+                <td className="text-center">{item.price}</td>
+                <td className="text-center">{item.quantity} </td>
+                <td className="text-center">{item.price * item.quantity}</td>
+                <td className="text-center">x</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
       <div className="mt-6 md:w-xl w-full text-center">
-        <h1>Cart Total</h1>
+        <h1 className="font-semibold">Cart Total</h1>
         <div className="w-full flex justify-between px-2  border-b-1 border-gray-400 mb-2">
-          <span>Subtotal</span>
-          <span> &#8377; 301</span>
+          <span className="font-bold">Subtotal</span>
+          <span> &#8377; {cartTotal}</span>
         </div>
         <div className="w-full flex justify-between px-2  border-b-1 border-gray-400 mb-2">
-          <span>Shipping Fee</span>
+          <span className="font-bold">Shipping Fee</span>
           <span> Free</span>
         </div>
         <div className="w-full flex justify-between px-2  border-b-1 border-gray-400">
-          <span>Total</span>
-          <span> &#8377; 301</span>
+          <span className="font-bold">Total</span>
+          <span> &#8377; {cartTotal}</span>
         </div>
       </div>
     </div>
