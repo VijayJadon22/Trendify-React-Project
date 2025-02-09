@@ -7,6 +7,7 @@ const ProductCard = ({ product }) => {
   const { isUserLoggedIn } = useUserContext();
   const navigate = useNavigate();
   const { image, name, brand, price } = product;
+  // console.log(product);
 
   // Handle product click based on user authentication status
   const handleProductClick = (productId) => {
