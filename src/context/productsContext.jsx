@@ -2,113 +2,6 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { firestoreDB } from "../Database/firebaseConfig";
 import { getDocs, collection, addDoc, doc, getDoc } from "firebase/firestore";
 
-const data = [
-  {
-    brand: "Nike",
-    category: "men",
-    price: 549,
-    name: "Tshirt",
-    sizes: ["S", "L", "XL"],
-    stock: 4,
-    image:
-      "https://www.cottonheritage.com/catImg/WAMSMALL/mc1040_082924094923.jpg",
-  },
-  {
-    brand: "Nike",
-    category: "men",
-    price: 549,
-    name: "Tshirt",
-    sizes: ["S", "L", "XL"],
-    stock: 4,
-    image:
-      "https://th.bing.com/th/id/OIP.RHzRocDQ-VPOif5AmSbAeQHaKl?rs=1&pid=ImgDetMain",
-  },
-  {
-    brand: "Mufti",
-    category: "men",
-    price: 200,
-    name: "Tshirt",
-    sizes: ["S", "M", "L", "XL"],
-    stock: 4,
-    image:
-      "https://www.cottonheritage.com/catImg/WAMSMALL/MC1086_040924092749.jpg",
-  },
-  {
-    brand: "Blue Buddha",
-    category: "men",
-    price: 2000,
-    name: "Sweat Pants",
-    sizes: ["M", "L", "XL"],
-    stock: 10,
-    image:
-      "https://www.cottonheritage.com/catImg/WAMLARGE/M7450_111723153946.jpg",
-  },
-  {
-    brand: "Zara",
-    category: "men",
-    price: 500,
-    name: "Shorts",
-    sizes: ["M", "L", "XL"],
-    stock: 8,
-    image:
-      "https://www.cottonheritage.com/catImg/WAMLARGE/M7455_112123104807.jpg",
-  },
-  {
-    brand: "Alvami Women",
-    category: "women",
-    price: 1200,
-    name: "Kurta and Pant Set",
-    sizes: ["M", "L", "XL"],
-    stock: 8,
-    image: "https://m.media-amazon.com/images/I/61IhrjrcrLL._SX679_.jpg",
-  },
-  {
-    brand: "VredeVogel Women",
-    category: "women",
-    price: 2200,
-    name: "Kurta Pant with Dupatta Set",
-    sizes: ["M", "L", "XL"],
-    stock: 2,
-    image: "https://m.media-amazon.com/images/I/61lXK1IH8qL._SY741_.jpg",
-  },
-  {
-    brand: "VredeVogel Women",
-    category: "women",
-    price: 2000,
-    name: "Kurta Pant with Dupatta Set",
-    sizes: ["L", "XL"],
-    stock: 4,
-    image: "https://m.media-amazon.com/images/I/71kYIQzC5zL._SY879_.jpg",
-  },
-  {
-    brand: "LEOTUDE",
-    category: "women",
-    price: 2000,
-    name: "Regular Fit Camouflage Women Tshirt",
-    sizes: ["M", "L", "XL"],
-    stock: 3,
-    image: "https://m.media-amazon.com/images/I/71AKZojTDsL._SY741_.jpg",
-  },
-  {
-    brand: "Googo Gaaga",
-    category: "kids",
-    price: 1500,
-    name: "Boy's Printed Sweatshirt and Pant Set",
-    sizes: ["M", "L", "XL"],
-    stock: 3,
-    image: "https://m.media-amazon.com/images/I/517+8nArL8L._SX679_.jpg",
-  },
-  {
-    brand: "Toonyport",
-    category: "kids",
-    price: 1200,
-    name: "Boys & Girls Sweatshirt and Jogger",
-    sizes: ["M", "L", "XL"],
-    stock: 3,
-    image: "https://m.media-amazon.com/images/I/71J-MkBeJPL._SX679_.jpg",
-  },
-];
-
 // Create a ProductContext to share product-related data and functions across components
 const ProductContext = createContext(null);
 
@@ -119,13 +12,23 @@ export const useProductContext = () => useContext(ProductContext);
 export const ProductProvider = (props) => {
   // State to hold the list of products
   const [products, setProducts] = useState([]);
-  // Fetch products when the component mounts
 
+  // State to hold the selected categories for filtering
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  console.log(searchQuery);
 
+  // State to hold the filtered list of products
+  const [filteredProducts, setFilteredProducts] = useState([]);
+
+  // State to hold the search query for filtering
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // State to hold the price range for filtering
+  const [priceRange, setPriceRange] = useState([0, 3000]);
+
+  // Log the current price range (for debugging purposes)
+  console.log(priceRange);
+
+  // useEffect to filter products based on selected categories, search query, and price range
   useEffect(() => {
     let filtered = products;
     if (selectedCategories.length > 0) {
@@ -141,13 +44,19 @@ export const ProductProvider = (props) => {
           product.brand.toLowerCase().includes(searchQuery)
       );
     }
+    filtered = filtered.filter(
+      (product) =>
+        product.price >= priceRange[0] && product.price <= priceRange[1]
+    );
     setFilteredProducts(filtered);
-  }, [selectedCategories, products, searchQuery]);
+  }, [selectedCategories, products, searchQuery, priceRange]);
 
+  // Effect to fetch all products when the component mounts
   useEffect(() => {
-    fetchAllProducts(); //function to fetch all products from forestore database
+    fetchAllProducts(); // Function to fetch all products from Firestore database
   }, []);
 
+  // Function to handle checkbox changes for category filtering
   const handleCheckboxChange = (event) => {
     try {
       const { name, checked } = event.target;
@@ -159,6 +68,7 @@ export const ProductProvider = (props) => {
     }
   };
 
+  // Function to handle input changes for search query filtering
   const handleInputFilter = (event) => {
     try {
       setSearchQuery(event.target.value.toLowerCase());
@@ -167,8 +77,26 @@ export const ProductProvider = (props) => {
     }
   };
 
+  // Function to handle changes in the price range filter
+  const handlePriceRangeChange = (event) => {
+    try {
+      const newRange = [0, Number(event.target.value)];
+      setPriceRange(newRange);
+    } catch (error) {
+      console.log("Error filtering products, handlePriceRangeChange: ", error);
+    }
+  };
+
+  // Function to reset all filters
+  const handleResetFilter = () => {
+    setSelectedCategories([]);
+    setSearchQuery("");
+    setPriceRange([0, 3000]);
+  };
+
   // // uploading products
   // const uploadData = async () => {
+  //   // Iterate over the data array and upload each document to Firestore
   //   const promises = data.map(async (doc) => {
   //     const collectionRef = collection(
   //       firestoreDB,
@@ -180,7 +108,7 @@ export const ProductProvider = (props) => {
   //   });
   // };
 
-  // Function to fetch products from the Firestore database
+  // Function to fetch all products from the Firestore database
   const fetchAllProducts = async () => {
     try {
       // Reference to the products collection
@@ -197,7 +125,6 @@ export const ProductProvider = (props) => {
         id: doc.id,
         ...doc.data(),
       }));
-      // console.log(productsList);
       // Update the state with the fetched products
       setProducts(productsList);
     } catch (error) {
@@ -205,6 +132,7 @@ export const ProductProvider = (props) => {
     }
   };
 
+  // Function to fetch details of a single product by its ID
   const fetchProductDetails = async (productId) => {
     try {
       const docRef = doc(
@@ -226,6 +154,7 @@ export const ProductProvider = (props) => {
       return null;
     }
   };
+
   return (
     // Provide product-related data and functions to child components
     <ProductContext.Provider
@@ -236,6 +165,9 @@ export const ProductProvider = (props) => {
         selectedCategories,
         filteredProducts,
         handleInputFilter,
+        handlePriceRangeChange,
+        priceRange,
+        handleResetFilter,
       }}
     >
       {props.children}
